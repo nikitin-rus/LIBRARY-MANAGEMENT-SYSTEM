@@ -1,0 +1,36 @@
+﻿<Window x:Class="LIBRARY_MANAGEMENT_SYSTEM.Modals.ReaderAssignment"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LIBRARY_MANAGEMENT_SYSTEM.Modals"
+        mc:Ignorable="d"
+        Title="Назначение читателя" Height="450" Width="800">
+    
+    <StackPanel x:Name="SearchReaderControlsStackPanel">
+        <StackPanel x:Name="DataInputs">
+            <StackPanel x:Name="SearchReaderControl">
+                <TextBlock Text="ФИО читателя"/>
+                <TextBox x:Name="ReaderNameTextBox" 
+                     MinWidth="100"
+                     TextChanged="ReaderNameTextBox_TextChanged"/>
+            </StackPanel>
+
+            <DatePicker x:Name="ReturnDatePicker" 
+                    SelectedDateFormat="Short"/>
+        </StackPanel>
+
+        <ListBox x:Name="FoundReadersListBox" 
+                 SelectionMode="Single"
+                 SelectionChanged="FoundReadersListBox_SelectionChanged">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Path=Name}"/>
+                        <TextBlock FontSize="12" Text="{Binding Path=Phone}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </StackPanel>
+</Window>

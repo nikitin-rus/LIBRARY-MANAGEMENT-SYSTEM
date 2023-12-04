@@ -1,0 +1,45 @@
+﻿<Page x:Class="LIBRARY_MANAGEMENT_SYSTEM.Pages.BooksPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:LIBRARY_MANAGEMENT_SYSTEM.Pages"
+      xmlns:converters="clr-namespace:LIBRARY_MANAGEMENT_SYSTEM.Converters"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="200"
+      Title="Книги">
+    <Page.Resources>
+        <converters:DateConverter x:Key="DateConverter"/>
+    </Page.Resources>
+
+    <StackPanel>
+        <Button x:Name="NavBtn" Content="Показать читателей" Click="NavBtn_Click"/>
+        <Button x:Name="AddBtn" Content="Добавить новую книгу" Click="AddBtn_Click"/>
+        <Button x:Name="BorrowBookBtn" Content="Назначить читателя на выд. книгу" Click="BorrowBookBtn_Click"/>
+        <Button x:Name="ReturnBookBtn" Content="Снять читателя с выд. книги" Click="ReturnBookBtn_Click"/>
+        <Button x:Name="DelBtn" Content="Удалить выд. книгу" Click="DelBtn_Click"/>
+
+        <DataGrid x:Name="BooksDataGrid" 
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserResizeRows="False"
+                  CanUserResizeColumns="False"
+                  CanUserReorderColumns="False"
+                  SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTextColumn IsReadOnly="True" Header="Id" Binding="{Binding Id}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="Название" Binding="{Binding Title}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="Автор" Binding="{Binding Author}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="Isbn" Binding="{Binding Isbn}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="Статус" Binding="{Binding Status}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="ФИО читателя"
+                                    Binding="{Binding Reader.Name, TargetNullValue='Нет данных', 
+                    FallbackValue='Нет данных'}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="Дата возврата" 
+                                    Binding="{Binding ReturnDate, TargetNullValue='Нет данных',
+                    Converter={StaticResource DateConverter}}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </StackPanel>
+</Page>

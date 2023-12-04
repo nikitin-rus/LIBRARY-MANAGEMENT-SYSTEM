@@ -1,0 +1,33 @@
+﻿<Page x:Class="LIBRARY_MANAGEMENT_SYSTEM.Pages.ReadersPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:LIBRARY_MANAGEMENT_SYSTEM.Pages"
+      xmlns:core="clr-namespace:System;assembly=mscorlib"
+      xmlns:enums="clr-namespace:LIBRARY_MANAGEMENT_SYSTEM.Enums"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Читатели">
+    <StackPanel>
+        <Button x:Name="NavBtn" Content="Перейти к книгам" Click="NavBtn_Click"/>
+        <Button x:Name="AddBtn" Content="Новый читатель" Click="AddBtn_Click"/>
+        <Button x:Name="DelBtn" Content="Удалить выделенного читателя" Click="DelBtn_Click"/>
+
+        <DataGrid x:Name="ReadersDataGrid"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserResizeRows="False"
+                  CanUserResizeColumns="False"
+                  CanUserReorderColumns="False"
+                  SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTextColumn IsReadOnly="True" Header="Id" Binding="{Binding Id}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="ФИО" Binding="{Binding Name}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="Телефон" Binding="{Binding Phone}"/>
+                <DataGridTextColumn IsReadOnly="True" Header="Статус" Binding="{Binding Status}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </StackPanel>
+</Page>

@@ -1,0 +1,21 @@
+﻿<Window x:Class="LIBRARY_MANAGEMENT_SYSTEM.AddBookModal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LIBRARY_MANAGEMENT_SYSTEM"
+        mc:Ignorable="d"
+        Title="Добавление книги" Height="400"  Width="800">
+    <StackPanel>
+        <Label Content="Название"/>
+        <TextBox x:Name="bookTitleInput" Text="Портрет Дориана Грея"/>
+
+        <Label Content="Автор"/>
+        <TextBox x:Name="authorInput" Text="Оскар Уайльд"/>
+
+        <Label Content="ISBN"/>
+        <TextBox x:Name="isbnInput" Text="9785170908322"/>
+
+        <Button x:Name="addBtn" Click="AddBtn_Click" Content="Добавить" />
+    </StackPanel>
+</Window>
