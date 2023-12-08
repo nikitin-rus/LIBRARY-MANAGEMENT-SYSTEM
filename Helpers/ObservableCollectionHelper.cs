@@ -11,5 +11,12 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Helpers
 
             foreach (T item in items) collection.Add(item);
         }
+
+        public static void Update<T>(ObservableCollection<T> collection, params T[] items)
+        {
+            collection.Clear();
+
+            AddRange(collection, items);
+        }
     }
 }

@@ -5,21 +5,27 @@ using System.Collections.ObjectModel;
 using System;
 using System.Windows.Controls;
 using LIBRARY_MANAGEMENT_SYSTEM.Helpers;
+using System.Linq;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace LIBRARY_MANAGEMENT_SYSTEM.Pages
 {
     public partial class ReadersPage: Page
     {
+        private ObservableCollection<Reader> Readers { get; } = [];
+
         public ReadersPage()
         {
             InitializeComponent();
 
-            ReadersDataGrid.ItemsSource = Repository.Readers;
+            ObservableCollectionHelper.AddRange(Readers, Repository.Readers.ToArray());
+
+            ReadersDataGrid.ItemsSource = Readers;
         }
 
         private void NavBtn_Click(object sender, EventArgs e)
         {
-            NavigationService.Navigate(MainWindow.BooksPage);
+            App.DataGridsFrame?.Navigate(App.BooksPage);
         }
 
         private void AddBtn_Click(object sender, EventArgs e)
@@ -29,6 +35,8 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Pages
             if (w.ShowDialog() == true)
             {
                 Repository.Readers.Add(w.Result!);
+
+                ObservableCollectionHelper.Update(Readers, Repository.Readers.ToArray());
             }
         }
 
@@ -42,7 +50,20 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Pages
                 {
                     reader.ReturnBook(book);
                 }
+
+                ObservableCollectionHelper.Update(Readers, Repository.Readers.ToArray());
             }
+        }
+
+        private void ReaderNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Readers.Clear();
+
+            Reader[] readers = Repository.Readers.Where(reader =>
+                reader.Name.Contains(ReaderNameTextBox.Text,
+                    StringComparison.CurrentCultureIgnoreCase)).ToArray();
+
+            ObservableCollectionHelper.AddRange(Readers, readers);
         }
     }
 }

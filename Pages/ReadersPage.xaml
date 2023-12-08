@@ -10,9 +10,13 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Читатели">
     <StackPanel>
-        <Button x:Name="NavBtn" Content="Перейти к книгам" Click="NavBtn_Click"/>
-        <Button x:Name="AddBtn" Content="Новый читатель" Click="AddBtn_Click"/>
-        <Button x:Name="DelBtn" Content="Удалить выделенного читателя" Click="DelBtn_Click"/>
+        <TextBlock Text="Введите ФИО читателя"/>
+        <TextBox x:Name="ReaderNameTextBox"
+                 TextChanged="ReaderNameTextBox_TextChanged"/>
+
+        <Button x:Name="NavBtn" Content="Показать книги" Click="NavBtn_Click"/>
+        <Button x:Name="AddBtn" Content="Добавить нового читателя" Click="AddBtn_Click"/>
+        <Button x:Name="DelBtn" Content="Удалить выд. читателя" Click="DelBtn_Click"/>
 
         <DataGrid x:Name="ReadersDataGrid"
                   AutoGenerateColumns="False"

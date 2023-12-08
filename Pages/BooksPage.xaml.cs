@@ -7,21 +7,26 @@ using System.Windows.Controls;
 using LIBRARY_MANAGEMENT_SYSTEM.Enums;
 using System.Windows;
 using LIBRARY_MANAGEMENT_SYSTEM.Modals;
+using System.Linq;
 
 namespace LIBRARY_MANAGEMENT_SYSTEM.Pages
 {
     public partial class BooksPage : Page
     {
+        private ObservableCollection<Book> Books { get; } = [];
+
         public BooksPage()
         {
             InitializeComponent();
 
-            BooksDataGrid.ItemsSource = Repository.Books;
+            ObservableCollectionHelper.AddRange(Books, Repository.Books.ToArray());
+
+            BooksDataGrid.ItemsSource = Books;
         }
 
         private void NavBtn_Click(object sender, EventArgs e)
         {
-            NavigationService.Navigate(MainWindow.ReadersPage);
+            App.DataGridsFrame?.Navigate(App.ReadersPage);
         }
 
         private void AddBtn_Click(object sender, EventArgs e)
@@ -31,6 +36,8 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Pages
             if (w.ShowDialog() == true)
             {
                 Repository.Books.Add(w.Result!);
+
+                ObservableCollectionHelper.Update(Books, Repository.Books.ToArray());
             }
         }
 
@@ -44,6 +51,8 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Pages
                 }
 
                 Repository.Books.Remove(book);
+
+                ObservableCollectionHelper.Update(Books, Repository.Books.ToArray());
             }
         }
 
@@ -63,6 +72,17 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Pages
             {
                 book.Reader?.ReturnBook(book);
             }
+        }
+        
+        private void BookTitleTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Books.Clear();
+
+            Book[] books = Repository.Books.Where(book =>
+                book.Title.Contains(BookTitleTextBox.Text,
+                    StringComparison.CurrentCultureIgnoreCase)).ToArray();
+
+            ObservableCollectionHelper.AddRange(Books, books);
         }
     }
 }

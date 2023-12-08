@@ -21,8 +21,8 @@ namespace LIBRARY_MANAGEMENT_SYSTEM
 {
     public partial class MainWindow : NavigationWindow
     {
-        public static BooksPage BooksPage { get; } = new();
-        public static ReadersPage ReadersPage { get; } = new();
+        public static BooksPage BooksPage { get; set; }
+        public static ReadersPage ReadersPage { get; set; }
 
         public MainWindow()
         {
@@ -38,9 +38,15 @@ namespace LIBRARY_MANAGEMENT_SYSTEM
 
             ObservableCollectionHelper.AddRange(Repository.Readers, [new() { Name = "Иванов Иван Иванович", Phone = 77654014102 }]);
 
+            ObservableCollectionHelper.AddRange(Repository.Users, new User[]
+            {
+                new("test_login1", "test_password") { FirstName = "Руслан", SecondName = "Никитин", Phone = 75675144073 },
+                new("test_login2", "test_password") { FirstName = "Иван", SecondName = "Иванов", Phone = 75675144074 },
+            });
+
             Repository.Readers[0].BorrowBook(Repository.Books[0], DateOnly.FromDateTime(DateTime.Now));
 
-            Navigate(BooksPage);
+            Navigate(App.LoginPage);
         }
     }
 }

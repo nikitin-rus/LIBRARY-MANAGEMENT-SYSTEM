@@ -12,5 +12,6 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.DataStorage
     {
         public static ObservableCollection<Book> Books { get; } = [];
         public static ObservableCollection<Reader> Readers { get; } = [];
+        public static ObservableCollection<User> Users { get; } = [];
     }
 }
