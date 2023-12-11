@@ -1,6 +1,7 @@
 ﻿using LIBRARY_MANAGEMENT_SYSTEM.DataStorage;
 using LIBRARY_MANAGEMENT_SYSTEM.Entities;
 using LIBRARY_MANAGEMENT_SYSTEM.Helpers;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -33,7 +34,7 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Modals
 
             using ApplicationContext db = new();
 
-            Readers = [.. db.Readers];
+            Readers = [.. db.Readers.Include(r => r.Books)];
 
             // Изначальное заполение списка читателей всеми значениями
             ObservableCollectionHelper.AddRange(DisplayedReaders, Readers.ToArray());

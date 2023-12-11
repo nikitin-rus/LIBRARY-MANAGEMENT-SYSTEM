@@ -1,10 +1,11 @@
 ﻿using LIBRARY_MANAGEMENT_SYSTEM.Enums;
 using LIBRARY_MANAGEMENT_SYSTEM.Modals;
 using System;
+using System.ComponentModel;
 
 namespace LIBRARY_MANAGEMENT_SYSTEM.Entities
 {
-    public class Book : Entity
+    public class Book : INotifyPropertyChanged
     {
         Reader? _reader = null;
         DateOnly? _returnDate = null;
@@ -41,6 +42,13 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Entities
                 _status = value;
                 OnPropertyChanged(nameof(Status));
             }
-        } 
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public void OnPropertyChanged(string propName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+        }
     }
 }

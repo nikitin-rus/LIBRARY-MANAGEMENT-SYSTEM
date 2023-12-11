@@ -1,11 +1,12 @@
 ﻿using LIBRARY_MANAGEMENT_SYSTEM.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Net.NetworkInformation;
 
 namespace LIBRARY_MANAGEMENT_SYSTEM.Entities
 {
-    public class Reader : Entity
+    public class Reader : INotifyPropertyChanged
     {
         private ReaderStatus _status = ReaderStatus.WithoutBook;
 
@@ -47,6 +48,13 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Entities
                     Status = ReaderStatus.WithoutBook;
                 }
             }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public void OnPropertyChanged(string propName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
     }
 }

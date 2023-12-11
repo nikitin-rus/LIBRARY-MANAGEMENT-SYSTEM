@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LIBRARY_MANAGEMENT_SYSTEM.Entities
+﻿namespace LIBRARY_MANAGEMENT_SYSTEM.Entities
 {
-    public class User
+    public class User 
     {
         public int Id { get; init; }
         public required string FirstName { get; init; }

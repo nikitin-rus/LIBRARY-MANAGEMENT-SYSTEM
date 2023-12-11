@@ -54,7 +54,7 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Pages
                 db.SaveChanges();
 
                 // Обновление полученного списка книг
-                Books = [.. db.Books];
+                Books = [.. db.Books.Include(b => b.Reader)];
 
                 // Обновление отображаемых книг
                 UpdateDisplayedBooks(BookTitleTextBox.Text);
@@ -80,7 +80,7 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Pages
                 db.SaveChanges();
 
                 // Обновление полученного списка книг
-                Books = [.. db.Books];
+                Books = [.. db.Books.Include(b => b.Reader)];
 
                 // Обновление отображаемых книг
                 UpdateDisplayedBooks(BookTitleTextBox.Text);

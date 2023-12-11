@@ -52,7 +52,7 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Pages
                 db.SaveChanges();
 
                 // Обновление списка читателей
-                Readers = [.. db.Readers];
+                Readers = [.. db.Readers.Include(r => r.Books)];
 
                 // Обновление отображаемого списка читателей
                 UpdateDisplayedReaders(ReaderNameTextBox.Text);
@@ -75,7 +75,7 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Pages
                 db.SaveChanges();
 
                 // Обновление списка читателей
-                Readers = [.. db.Readers];
+                Readers = [.. db.Readers.Include(r => r.Books)];
 
                 // Обновление отображаемого списка читателей
                 UpdateDisplayedReaders(ReaderNameTextBox.Text);
