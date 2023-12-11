@@ -24,14 +24,12 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Pages
 
             HelloTextBox.Text = $"Привет, {user.FirstName}!";
 
-            App.DataGridsFrame = DataGridsFrame;
-
-            DataGridsFrame.Navigate(App.BooksPage);
+            DataGridsFrame.Navigate(new BooksPage(DataGridsFrame));
         }
 
         private void ExitBtn_Click(object sender, RoutedEventArgs e)
         {
-            NavigationService.Navigate(App.LoginPage);
+            NavigationService.Navigate(new LoginPage());
         }
     }
 }

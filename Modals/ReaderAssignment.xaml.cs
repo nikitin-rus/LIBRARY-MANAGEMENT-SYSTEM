@@ -15,13 +15,15 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Xml.Linq;
 
 namespace LIBRARY_MANAGEMENT_SYSTEM.Modals
 {
     public partial class ReaderAssignment : Window
     {
-        private Book Book { get; set; }
-        private ObservableCollection<Reader> FoundReaders { get; } = [];
+        private Book Book { get; init; }
+        private List<Reader> Readers { get; set; }
+        private ObservableCollection<Reader> DisplayedReaders { get; } = [];
 
         public ReaderAssignment(Book book)
         {
@@ -29,28 +31,22 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Modals
 
             Book = book;
 
+            using ApplicationContext db = new();
+
+            Readers = [.. db.Readers];
+
             // Изначальное заполение списка читателей всеми значениями
-            ObservableCollectionHelper.AddRange(FoundReaders, Repository.Readers.ToArray());
+            ObservableCollectionHelper.AddRange(DisplayedReaders, Readers.ToArray());
 
-            FoundReadersListBox.ItemsSource = FoundReaders;
-        }
-
-        private void ReaderNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            FoundReaders.Clear();
-
-            foreach (Reader r in Repository.Readers.Where(reader =>
-                reader.Name.Contains(ReaderNameTextBox.Text,
-                    StringComparison.CurrentCultureIgnoreCase)))
-            {
-                FoundReaders.Add(r);
-            }
+            FoundReadersListBox.ItemsSource = DisplayedReaders;
         }
 
         private void FoundReadersListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (FoundReadersListBox.SelectedItem is Reader reader)
             {
+                using ApplicationContext db = new();
+
                 if (ReturnDatePicker.SelectedDate is null)
                 {
                     MessageBox.Show("Не указана дата возврата!");
@@ -61,10 +57,32 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Modals
                 if (ReturnDatePicker.SelectedDate is DateTime dateTime)
                 {
                     reader.BorrowBook(Book, DateOnly.FromDateTime(dateTime));
+
+                    db.UpdateRange(reader, Book);
+                    db.SaveChanges();
                     Close();
-                    return;
                 }
             }
+        }
+
+        private void ReaderNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateFoundReaders(ReaderNameTextBox.Text);
+        }
+
+        private void UpdateFoundReaders(string name)
+        {
+            List<Reader> readers = [];
+
+            foreach (Reader r in Readers)
+            {
+                if (r.Name.Contains(name, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    readers.Add(r);
+                }
+            }
+
+            ObservableCollectionHelper.Update(DisplayedReaders, readers.ToArray());
         }
     }
 }

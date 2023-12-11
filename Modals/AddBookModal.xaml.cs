@@ -1,6 +1,7 @@
 ﻿using LIBRARY_MANAGEMENT_SYSTEM.DataStorage;
 using LIBRARY_MANAGEMENT_SYSTEM.Entities;
 using System;
+using System.Linq;
 using System.Windows;
 
 namespace LIBRARY_MANAGEMENT_SYSTEM
@@ -16,13 +17,15 @@ namespace LIBRARY_MANAGEMENT_SYSTEM
 
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {
+            using ApplicationContext db = new();
+
             if (!long.TryParse(isbnInput.Text, out long isbn))
             {
                 MessageBox.Show("Введенное значение isbn должено содержать только цифры");
                 return;
             }
 
-            foreach (Book book in Repository.Books)
+            foreach (Book book in db.Books.ToArray())
             {
                 if (book.Isbn == isbn)
                 {

@@ -26,14 +26,13 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Pages
 
         private void LoginUserBtn_Click(object sender, RoutedEventArgs e)
         {
-            foreach (User user in Repository.Users)
-            {
-                if (user.Validate(LoginTextBox.Text, MyPasswordBox.Password))
-                {
-                    App.User = user;
-                    MainPage p = new(App.User);
+            using ApplicationContext db = new();
 
-                    NavigationService.Navigate(p);
+            foreach (User user in db.Users.ToList()) 
+            {
+                if (user.Validate(LoginTextBox.Text, MyPasswordBox.Password) == true)
+                {
+                    NavigationService.Navigate(new MainPage(user));
 
                     return;
                 }

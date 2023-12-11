@@ -6,16 +6,15 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Entities
 {
     public class Book : Entity
     {
-        static int count = 0;
-
         Reader? _reader = null;
         DateOnly? _returnDate = null;
         BookStatus _status = BookStatus.Stored;
 
-        public int Id { get; } = count++;
+        public int Id { get; init; }
         public required string Title { get; init; }
         public required string Author { get; init; }
         public required long Isbn { get; init; }
+        public int? ReaderId { get; set; }
         public Reader? Reader
         {
             get => _reader;

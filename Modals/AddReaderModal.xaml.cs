@@ -15,13 +15,15 @@ namespace LIBRARY_MANAGEMENT_SYSTEM
 
         private void AddBtn_Click(object sender, RoutedEventArgs e)
         {
+            using ApplicationContext db = new();
+
             if (!long.TryParse(phoneInput.Text, out long phone))
             {
                 MessageBox.Show("Введенное значение телефона должено содержать только цифры.");
                 return;
             }
 
-            foreach (Reader reader in Repository.Readers) 
+            foreach (Reader reader in db.Readers) 
             {
                 if (reader.Phone == phone)
                 {

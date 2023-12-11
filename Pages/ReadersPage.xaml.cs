@@ -6,26 +6,35 @@ using System;
 using System.Windows.Controls;
 using LIBRARY_MANAGEMENT_SYSTEM.Helpers;
 using System.Linq;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using static System.Reflection.Metadata.BlobBuilder;
 
 namespace LIBRARY_MANAGEMENT_SYSTEM.Pages
 {
     public partial class ReadersPage: Page
     {
-        private ObservableCollection<Reader> Readers { get; } = [];
+        private Frame DataGridsFrame {  get; init; }
+        private List<Reader> Readers { get; set; } = [];
+        private ObservableCollection<Reader> DisplayedReaders { get; } = [];
 
-        public ReadersPage()
+        public ReadersPage(Frame dataGridsFrame)
         {
             InitializeComponent();
 
-            ObservableCollectionHelper.AddRange(Readers, Repository.Readers.ToArray());
+            DataGridsFrame = dataGridsFrame;
 
-            ReadersDataGrid.ItemsSource = Readers;
+            using ApplicationContext db = new();
+
+            Readers = [.. db.Readers.Include(r => r.Books)];
+            ObservableCollectionHelper.AddRange(DisplayedReaders, Readers.ToArray());
+
+            ReadersDataGrid.ItemsSource = DisplayedReaders;
         }
 
         private void NavBtn_Click(object sender, EventArgs e)
         {
-            App.DataGridsFrame?.Navigate(App.BooksPage);
+            DataGridsFrame.Navigate(new BooksPage(DataGridsFrame));
         }
 
         private void AddBtn_Click(object sender, EventArgs e)
@@ -34,9 +43,19 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Pages
 
             if (w.ShowDialog() == true)
             {
-                Repository.Readers.Add(w.Result!);
+                using ApplicationContext db = new();
 
-                ObservableCollectionHelper.Update(Readers, Repository.Readers.ToArray());
+                Reader reader = w.Result!;
+
+                // Обновление БД
+                db.Readers.Add(reader);
+                db.SaveChanges();
+
+                // Обновление списка читателей
+                Readers = [.. db.Readers];
+
+                // Обновление отображаемого списка читателей
+                UpdateDisplayedReaders(ReaderNameTextBox.Text);
             }
         }
 
@@ -44,26 +63,43 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Pages
         {
             if (ReadersDataGrid.SelectedItem is Reader reader)
             {
-                Repository.Readers.Remove(reader);
+                using ApplicationContext db = new();
 
-                foreach (Book book in reader.BookToReturnDate.Keys)
+                foreach (Book book in reader.Books.ToArray())
                 {
                     reader.ReturnBook(book);
+                    db.Books.Update(book);
                 }
 
-                ObservableCollectionHelper.Update(Readers, Repository.Readers.ToArray());
+                db.Readers.Remove(reader);
+                db.SaveChanges();
+
+                // Обновление списка читателей
+                Readers = [.. db.Readers];
+
+                // Обновление отображаемого списка читателей
+                UpdateDisplayedReaders(ReaderNameTextBox.Text);
             }
         }
 
         private void ReaderNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            Readers.Clear();
+            UpdateDisplayedReaders(ReaderNameTextBox.Text);
+        }
 
-            Reader[] readers = Repository.Readers.Where(reader =>
-                reader.Name.Contains(ReaderNameTextBox.Text,
-                    StringComparison.CurrentCultureIgnoreCase)).ToArray();
+        private void UpdateDisplayedReaders(string name)
+        {
+            List<Reader> readers = [];
 
-            ObservableCollectionHelper.AddRange(Readers, readers);
+            foreach (Reader r in Readers)
+            {
+                if (r.Name.Contains(name, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    readers.Add(r);
+                }
+            }
+
+            ObservableCollectionHelper.Update(DisplayedReaders, readers.ToArray());
         }
     }
 }

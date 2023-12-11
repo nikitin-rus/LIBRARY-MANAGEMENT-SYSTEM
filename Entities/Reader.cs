@@ -7,11 +7,9 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Entities
 {
     public class Reader : Entity
     {
-        static int count = 0;
-
         private ReaderStatus _status = ReaderStatus.WithoutBook;
 
-        public int Id { get; } = count++;
+        public int Id { get; init; }
         public required string Name { get; init; }
         public required long Phone { get; init; }
         public ReaderStatus Status 
@@ -23,8 +21,7 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Entities
                 OnPropertyChanged(nameof(Status));
             }
         }
-
-        public Dictionary<Book, DateOnly> BookToReturnDate { get; } = [];
+        public List<Book> Books { get; } = [];
 
         public void BorrowBook(Book book, DateOnly returnDate)
         {
@@ -33,18 +30,19 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Entities
             book.Status = BookStatus.Borrowed;
             Status = ReaderStatus.HasBook;
 
-            BookToReturnDate.Add(book, returnDate);
+            Books.Add(book);
         }
         
         public void ReturnBook(Book book)
         {
-            if (BookToReturnDate.Remove(book))
+            if (Books.Remove(book) == true)
             {
+                book.ReaderId = null;
                 book.Reader = null;
                 book.ReturnDate = null;
                 book.Status = BookStatus.Stored;
 
-                if (BookToReturnDate.Count < 1)
+                if (Books.Count < 1)
                 {
                     Status = ReaderStatus.WithoutBook;
                 }
