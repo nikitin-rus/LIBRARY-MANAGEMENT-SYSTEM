@@ -1,40 +1,30 @@
 ﻿using LIBRARY_MANAGEMENT_SYSTEM.DataStorage;
 using LIBRARY_MANAGEMENT_SYSTEM.Entities;
-using LIBRARY_MANAGEMENT_SYSTEM.Modals;
-using System.Collections.ObjectModel;
-using System;
-using System.Windows.Controls;
 using LIBRARY_MANAGEMENT_SYSTEM.Helpers;
-using System.Linq;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using static System.Reflection.Metadata.BlobBuilder;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows.Controls;
 
 namespace LIBRARY_MANAGEMENT_SYSTEM.Pages
 {
     public partial class ReadersPage: Page
     {
-        private Frame DataGridsFrame {  get; init; }
         private List<Reader> Readers { get; set; } = [];
         private ObservableCollection<Reader> DisplayedReaders { get; } = [];
 
-        public ReadersPage(Frame dataGridsFrame)
+        public ReadersPage()
         {
             InitializeComponent();
-
-            DataGridsFrame = dataGridsFrame;
 
             using ApplicationContext db = new();
 
             Readers = [.. db.Readers.Include(r => r.Books)];
+
             ObservableCollectionHelper.AddRange(DisplayedReaders, Readers.ToArray());
 
             ReadersDataGrid.ItemsSource = DisplayedReaders;
-        }
-
-        private void NavBtn_Click(object sender, EventArgs e)
-        {
-            DataGridsFrame.Navigate(new BooksPage(DataGridsFrame));
         }
 
         private void AddBtn_Click(object sender, EventArgs e)

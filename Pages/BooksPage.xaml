@@ -16,8 +16,6 @@
         <TextBlock Text="Введите название книги"/>
         <TextBox x:Name="BookTitleTextBox"
                  TextChanged="BookTitleTextBox_TextChanged"/>
-        
-        <Button x:Name="NavBtn" Content="Показать читателей" Click="NavBtn_Click"/>
         <Button x:Name="AddBtn" Content="Добавить новую книгу" Click="AddBtn_Click"/>
         <Button x:Name="BorrowBookBtn" Content="Назначить читателя на выд. книгу" Click="BorrowBookBtn_Click"/>
         <Button x:Name="ReturnBookBtn" Content="Снять читателя с выд. книги" Click="ReturnBookBtn_Click"/>

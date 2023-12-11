@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -14,51 +13,41 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Pages
 {
     public partial class BooksPage : Page
     {
-        private Frame DataGridsFrame { get; init; }
         private List<Book> Books { get; set; } = [];
         private ObservableCollection<Book> DisplayedBooks { get; } = [];
 
-        public BooksPage(Frame dataGridsFrame)
+        public BooksPage()
         {
             InitializeComponent();
 
-            DataGridsFrame = dataGridsFrame;
-
             using ApplicationContext db = new();
 
-            Books = db.Books.Include(b => b.Reader).ToList();
+            Books = [.. db.Books.Include(b => b.Reader)];
 
             ObservableCollectionHelper.AddRange(DisplayedBooks, Books.ToArray());
 
             BooksDataGrid.ItemsSource = DisplayedBooks;
         }
 
-        private void NavBtn_Click(object sender, EventArgs e)
-        {
-            
-            DataGridsFrame.Navigate(new ReadersPage(DataGridsFrame));
-        }
-
         private void AddBtn_Click(object sender, EventArgs e)
         {
             AddBookModal w = new();
 
-            if (w.ShowDialog() == true)
-            {
-                using ApplicationContext db = new();
+            if (w.ShowDialog() == false) return;
 
-                Book book = w.Result!;
+            using ApplicationContext db = new();
 
-                // Обновление БД
-                db.Books.Add(book);
-                db.SaveChanges();
+            Book book = w.Result!;
 
-                // Обновление полученного списка книг
-                Books = [.. db.Books.Include(b => b.Reader)];
+            // Обновление БД
+            db.Books.Add(book);
+            db.SaveChanges();
 
-                // Обновление отображаемых книг
-                UpdateDisplayedBooks(BookTitleTextBox.Text);
-            }
+            // Обновление полученного списка книг
+            Books = [.. db.Books.Include(b => b.Reader)];
+
+            // Обновление отображаемых книг
+            UpdateDisplayedBooks(BookTitleTextBox.Text);
         }
 
         private void DelBtn_Click(object sender, EventArgs e)

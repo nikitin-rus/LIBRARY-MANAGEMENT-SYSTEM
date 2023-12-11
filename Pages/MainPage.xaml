@@ -9,6 +9,8 @@
       Title="Главная страница">
     <StackPanel>
         <TextBlock x:Name="HelloTextBox" FontSize="24"/>
+        <Button x:Name="NavigateBooks" Content="Показать книги" Click="NavigateBooks_Click"/>
+        <Button x:Name="NavigateReaders" Content="Показать читателей" Click="NavigateReaders_Click"/>
         <Frame x:Name="DataGridsFrame" NavigationUIVisibility="Hidden"/>
         <Button x:Name="ExitBtn" Click="ExitBtn_Click" Content="Выйти"/>
     </StackPanel>

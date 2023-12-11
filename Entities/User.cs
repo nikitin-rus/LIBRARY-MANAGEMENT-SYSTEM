@@ -1,6 +1,6 @@
 ﻿namespace LIBRARY_MANAGEMENT_SYSTEM.Entities
 {
-    public class User 
+    public class User
     {
         public int Id { get; init; }
         public required string FirstName { get; init; }
