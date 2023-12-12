@@ -33,21 +33,22 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Pages
         {
             AddBookModal w = new();
 
-            if (w.ShowDialog() == false) return;
+            if (w.ShowDialog() == true)
+            {
+                using ApplicationContext db = new();
 
-            using ApplicationContext db = new();
+                Book book = w.Result!;
 
-            Book book = w.Result!;
+                // Обновление БД
+                db.Books.Add(book);
+                db.SaveChanges();
 
-            // Обновление БД
-            db.Books.Add(book);
-            db.SaveChanges();
+                // Обновление полученного списка книг
+                Books = [.. db.Books.Include(b => b.Reader)];
 
-            // Обновление полученного списка книг
-            Books = [.. db.Books.Include(b => b.Reader)];
-
-            // Обновление отображаемых книг
-            UpdateDisplayedBooks(BookTitleTextBox.Text);
+                // Обновление отображаемых книг
+                UpdateDisplayedBooks();
+            }
         }
 
         private void DelBtn_Click(object sender, EventArgs e)
@@ -72,7 +73,7 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Pages
                 Books = [.. db.Books.Include(b => b.Reader)];
 
                 // Обновление отображаемых книг
-                UpdateDisplayedBooks(BookTitleTextBox.Text);
+                UpdateDisplayedBooks();
             }
         }
 
@@ -104,20 +105,13 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Pages
 
         private void BookTitleTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            UpdateDisplayedBooks(BookTitleTextBox.Text);
+            UpdateDisplayedBooks();
         }
 
-        private void UpdateDisplayedBooks(string title)
+        private void UpdateDisplayedBooks()
         {
-            List<Book> books = [];
-
-            foreach (Book b in Books)
-            {
-                if (b.Title.Contains(title, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    books.Add(b);
-                }
-            }
+            List<Book> books = CollectionHelper.GetFilteredByPropertySubstr(
+                Books, nameof(Book.Title), BookTitleTextBox.Text);
 
             ObservableCollectionHelper.Update(DisplayedBooks, books.ToArray());
         }

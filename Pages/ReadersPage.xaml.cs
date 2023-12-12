@@ -45,7 +45,7 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Pages
                 Readers = [.. db.Readers.Include(r => r.Books)];
 
                 // Обновление отображаемого списка читателей
-                UpdateDisplayedReaders(ReaderNameTextBox.Text);
+                UpdateDisplayedReaders();
             }
         }
 
@@ -68,26 +68,19 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Pages
                 Readers = [.. db.Readers.Include(r => r.Books)];
 
                 // Обновление отображаемого списка читателей
-                UpdateDisplayedReaders(ReaderNameTextBox.Text);
+                UpdateDisplayedReaders();
             }
         }
 
         private void ReaderNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            UpdateDisplayedReaders(ReaderNameTextBox.Text);
+            UpdateDisplayedReaders();
         }
 
-        private void UpdateDisplayedReaders(string name)
+        private void UpdateDisplayedReaders()
         {
-            List<Reader> readers = [];
-
-            foreach (Reader r in Readers)
-            {
-                if (r.Name.Contains(name, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    readers.Add(r);
-                }
-            }
+            List<Reader> readers = CollectionHelper.GetFilteredByPropertySubstr(
+                Readers, nameof(Reader.Name), ReaderNameTextBox.Text);
 
             ObservableCollectionHelper.Update(DisplayedReaders, readers.ToArray());
         }

@@ -5,18 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Xml.Linq;
 
 namespace LIBRARY_MANAGEMENT_SYSTEM.Modals
 {
@@ -68,20 +58,8 @@ namespace LIBRARY_MANAGEMENT_SYSTEM.Modals
 
         private void ReaderNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            UpdateFoundReaders(ReaderNameTextBox.Text);
-        }
-
-        private void UpdateFoundReaders(string name)
-        {
-            List<Reader> readers = [];
-
-            foreach (Reader r in Readers)
-            {
-                if (r.Name.Contains(name, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    readers.Add(r);
-                }
-            }
+            List<Reader> readers = CollectionHelper.GetFilteredByPropertySubstr(
+                Readers, nameof(Reader.Name), ReaderNameTextBox.Text);
 
             ObservableCollectionHelper.Update(DisplayedReaders, readers.ToArray());
         }
